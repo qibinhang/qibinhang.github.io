@@ -20,28 +20,34 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Qi Binhang的博客">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="前言由于服务部署在内网的服务器client上，为了使用户能通过公网访问并请求服务，需要将client的ip和提供服务的端口穿刺到阿里云服务器server上。本文记录服务部署的整个过程，涉及到阿里云服务器配置、frp穿刺、nginx端口转发。 穿刺下载frp首先需要下载frp，并上传到client和server上。一般是将frp文件夹放在&#x2F;usr&#x2F;local&#x2F;路径下。然后，将client的frp文件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="frp内网穿刺">
+<meta property="og:url" content="http://yoursite.com/2021/07/11/frp%E5%86%85%E7%BD%91%E7%A9%BF%E5%88%BA/index.html">
 <meta property="og:site_name" content="Qi Binhang的博客">
+<meta property="og:description" content="前言由于服务部署在内网的服务器client上，为了使用户能通过公网访问并请求服务，需要将client的ip和提供服务的端口穿刺到阿里云服务器server上。本文记录服务部署的整个过程，涉及到阿里云服务器配置、frp穿刺、nginx端口转发。 穿刺下载frp首先需要下载frp，并上传到client和server上。一般是将frp文件夹放在&#x2F;usr&#x2F;local&#x2F;路径下。然后，将client的frp文件">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-11T07:08:19.000Z">
+<meta property="article:modified_time" content="2021-07-11T07:46:39.945Z">
 <meta property="article:author" content="Qi Binhang">
+<meta property="article:tag" content="frp">
+<meta property="article:tag" content="nginx">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/">
+<link rel="canonical" href="http://yoursite.com/2021/07/11/frp%E5%86%85%E7%BD%91%E7%A9%BF%E5%88%BA/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>Qi Binhang的博客</title>
+  <title>frp内网穿刺 | Qi Binhang的博客</title>
   
 
 
@@ -150,9 +156,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -168,10 +175,9 @@
       <meta itemprop="name" content="Qi Binhang的博客">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/11/frp%E5%86%85%E7%BD%91%E7%A9%BF%E5%88%BA/" class="post-title-link" itemprop="url">frp内网穿刺</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          frp内网穿刺
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -193,7 +199,14 @@
                 </span>
             </span>
 
-          <br>
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
             <span class="post-meta-item" title="本文字数">
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
@@ -218,7 +231,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于服务部署在内网的服务器<code>client</code>上，为了使用户能通过公网访问并请求服务，需要将<code>client</code>的ip和提供服务的端口穿刺到阿里云服务器<code>server</code>上。本文记录服务部署的整个过程，涉及到阿里云服务器配置、frp穿刺、nginx端口转发。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于服务部署在内网的服务器<code>client</code>上，为了使用户能通过公网访问并请求服务，需要将<code>client</code>的ip和提供服务的端口穿刺到阿里云服务器<code>server</code>上。本文记录服务部署的整个过程，涉及到阿里云服务器配置、frp穿刺、nginx端口转发。</p>
 <h2 id="穿刺"><a href="#穿刺" class="headerlink" title="穿刺"></a>穿刺</h2><h3 id="下载frp"><a href="#下载frp" class="headerlink" title="下载frp"></a>下载frp</h3><p>首先需要下载<a href="https://github.com/fatedier/frp/releases" target="_blank" rel="noopener">frp</a>，并上传到<code>client</code>和<code>server</code>上。一般是将frp文件夹放在<code>/usr/local/</code>路径下。<br>然后，将<code>client</code>的frp文件夹中的<code>frps*</code>删去；将<code>server</code>的frp文件夹中的<code>frpc*</code>删去。</p>
 <h3 id="配置frp"><a href="#配置frp" class="headerlink" title="配置frp"></a>配置frp</h3><h4 id="配置阿里云server"><a href="#配置阿里云server" class="headerlink" title="配置阿里云server"></a>配置阿里云<code>server</code></h4><p>修改frp文件夹下的<code>frps.ini</code>配置文件：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">bind_port &#x3D; 7000  &#x2F;&#x2F; 该端口用于和内网服务器client通信</span><br></pre></td></tr></table></figure>
@@ -243,145 +256,34 @@
 </ol>
 <h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://blog.csdn.net/qq_36342854/article/details/108725708" target="_blank" rel="noopener">frp内网穿刺/反向代理教程</a><br><a href="https://www.jianshu.com/p/40594bccff9a" target="_blank" rel="noopener">ubuntu 安装nginx 并配置端口</a></p>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/frp/" rel="tag"># frp</a>
+              <a href="/tags/nginx/" rel="tag"># nginx</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/30/Python%E5%A4%9A%E8%BF%9B%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qi Binhang">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Qi Binhang的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/30/Python%E5%A4%9A%E8%BF%9B%E7%A8%8B/" class="post-title-link" itemprop="url">Python多进程</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-09-30 15:19:40" itemprop="dateCreated datePublished" datetime="2020-09-30T15:19:40+08:00">2020-09-30</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-05 14:51:41" itemprop="dateModified" datetime="2020-10-05T14:51:41+08:00">2020-10-05</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>2.8k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文记录一下python多进程包<code>multiprocessing</code>的使用、遇到的问题和注意事项。</p>
-<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><p><code>multiprocessing</code>提供了<code>Pool</code>、<code>Queue</code>和<code>Manager</code>等多种模块使用多进程，这里只记录4个使用<code>Pool</code>执行下面<code>func()</code>的方法。</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> multiprocessing</span><br><span class="line">NUM_CPU = <span class="number">2</span></span><br><span class="line">inputs = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br></pre></td></tr></table></figure>
-<h3 id="最简单的方式"><a href="#最简单的方式" class="headerlink" title="最简单的方式"></a>最简单的方式</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">(input)</span>:</span></span><br><span class="line">    result = run(input)</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line">    </span><br><span class="line"><span class="keyword">with</span> multiprocessing.Pool(NUM_CPU) <span class="keyword">as</span> p:</span><br><span class="line">    results = p.map(func, inputs)</span><br></pre></td></tr></table></figure>
-
-<h3 id="保留顺序的方式"><a href="#保留顺序的方式" class="headerlink" title="保留顺序的方式"></a>保留顺序的方式</h3><p>重新构造<code>inputs</code>，为其每一项增加一个<code>idx</code>用于得到结果后排序。同时，<code>func()</code>也需重新构造，输入需要<strong>解包</strong>，返回值需要<strong>增加idx</strong>。</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">(input)</span>:</span></span><br><span class="line">    input, idx = input</span><br><span class="line">    result = run()</span><br><span class="line">    <span class="keyword">return</span> result, idx</span><br><span class="line"></span><br><span class="line">inputs_with_idx = list(zip(inputs, range(len(inputs))))</span><br><span class="line"><span class="keyword">with</span> multiprocessing.Pool(NUM_CPU) <span class="keyword">as</span> p:</span><br><span class="line">    results = p.map(func, inputs_with_idx)</span><br><span class="line">results = list(sorted(results, key=<span class="keyword">lambda</span> x: x[<span class="number">1</span>]))</span><br><span class="line">results = [r[<span class="number">0</span>] <span class="keyword">for</span> r <span class="keyword">in</span> results]</span><br></pre></td></tr></table></figure>
-
-<h3 id="传入共享数据"><a href="#传入共享数据" class="headerlink" title="传入共享数据"></a>传入共享数据</h3><p>有些场景下，每个进程中执行的<code>func()</code>均需要访问同一个数据，例如，<code>func()</code>中需要访问一个字典<code>vocab</code>进行查找。这可以通过类似于<em>2. 保留顺序的方式</em>中那样，将<code>vocab</code>进行复制，然后作为一个参数传入<code>func()</code>中来实现，但这种方式无疑会导致主进程的内存开销剧增。更好的方式是利用<code>Pool()</code>本身提供的参数，如下所示：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">init_func</span><span class="params">(vocab_1, vocab_2)</span>:</span></span><br><span class="line">    <span class="keyword">global</span> g_vocab_1</span><br><span class="line">    <span class="keyword">global</span> g_vocab_2</span><br><span class="line">    g_vocab_1 = vocab_1</span><br><span class="line">    g_vocab_2 = vocab_2</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">(input)</span>:</span></span><br><span class="line">    a = g_vocab_1[input]</span><br><span class="line">    b = g_vocab_2[input]</span><br><span class="line">    result = run(a, b)</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> multiprocessing.Pool(NUM_CPU, initializer=init_func, initargs=(vocab_1, vocab_2)) <span class="keyword">as</span> p:</span><br><span class="line">    results = p.map(func, inputs)</span><br></pre></td></tr></table></figure>
-
-<h3 id="显示进度"><a href="#显示进度" class="headerlink" title="显示进度"></a>显示进度</h3><p>结合<code>imap()</code>与<code>tqdm</code>来显示多进程处理的进度。</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"><span class="keyword">with</span> multiprocessing.Pool(NUM_CPU) <span class="keyword">as</span> p:</span><br><span class="line">    results = list(tqdm(</span><br><span class="line">        p.imap(func, inputs), total=len(inputs)</span><br><span class="line">    ))</span><br></pre></td></tr></table></figure>
+        
 
 
-<h2 id="遇到过的问题"><a href="#遇到过的问题" class="headerlink" title="遇到过的问题"></a>遇到过的问题</h2><h3 id="时间开销异常"><a href="#时间开销异常" class="headerlink" title="时间开销异常"></a>时间开销异常</h3><p>使用多进程时，遇到最多的问题，就是时间开销异常，包括多进程时间开销<strong>未达到预期的那么低</strong>、<strong>和单进程开销一样</strong>以及<strong>比单进程开销高</strong>。一开始发现时间开销异常时，简单地以为是进程间的通信导致的，直到后来才发现原因。</p>
-<ul>
-<li><p>开销未达到预期那么低<br>  通过查阅一些资料，发现是代码写法存在问题。当时的代码中，需要用多进程执行的是<strong>类成员函数</strong>，而类中的<strong>类成员变量</strong><code>self.xxx</code>存储了大量的数据。每次创建一个新的进程时，所有成员变量均需要<strong>序列化</strong>和<strong>反序列化</strong>（多进程自身的机制），这便导致了大量的时间开销。<br>  <strong>解决方法：</strong><br>  (1) 避免类成员变量存储大量的数据，特别是超过4G的数据时，pickle的序列化将会出错。<br>  (2) 为类成员函数加上<code>@staticmethod</code>修饰器，将其转换为静态函数，从而避免传入参数<code>self</code>。必要时，可以通过<code>initializer</code>来传入一些必须的数据。</p>
-</li>
-<li><p>开销与单进程一样<br>  通过检查CPU利用率，发现实际上并没有使用多进程，实际可使用的CPU个数为1，然而代码中通过<code>multiprocessing.cpu_count()</code>得到的CPU个数却不止一个。原因是在向集群申请资源时，没有指定申请的CPU个数。未指定的情况下，即使集群的节点上存在多个CPU，但用户实际能只用的CPU只有一个。<br>  <strong>解决方法：</strong><br>  申请资源时，应该通过<code>-n</code>参数指定所需CPU的个数。</p>
-  <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ps -u  <span class="comment"># 查看进程信息</span></span><br><span class="line">ps -o pid,psr,comm -p &lt;pid&gt;  <span class="comment"># 查看进程&lt;pid&gt;在哪块CPU上运行。其中，psr为CPU编号。</span></span><br><span class="line"></span><br><span class="line">srun -p cpu -n2 --pty bash  <span class="comment"># 通过slurm，向集群申请2块CPU，并进入bash环境。</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>开销比单进程要高<br>  <code>multiprocessing</code>似乎会与<code>nltk</code>产生冲突。当时多进程执行的函数中，调用了<code>nltk</code>的一些函数。<br>  <strong>解决方法：</strong><br>  未想到很好的方法，只能替换<code>nltk</code>。</p>
-</li>
-</ul>
-<h3 id="pickle无法序列化"><a href="#pickle无法序列化" class="headerlink" title="pickle无法序列化"></a>pickle无法序列化</h3><ul>
-<li><p>存在数据类型无法序列化<br>  <code>multiprocessing.Pool</code>自身机制便是要使用<code>pickle</code>将参数等数据序列化，然后在子进程中反序列化。可能存在的问题就是，有些数据类型是无法使用<code>pickle</code>序列化的，例如，曾经遇到过将<code>pandas</code>的<code>Series</code>作为参数传递时报错。<br>  <strong>解决方法：</strong><br>  将不可序列化的数据转换为可序列化的，例如，将<code>Series</code>转换为<code>list</code>。</p>
-</li>
-<li><p>数据量太大，导致超过pickle能处理的上限<br>  这个问题实际上并没有解决，因为当时并没有找到问题究竟出现在哪里。出现问题的原因可能是当时类成员变量存储了大量的数据，导致多进程执行类成员函数时，对超过4G的数据进行了序列化。</p>
-</li>
-</ul>
-<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ol>
-<li>因为多进程的程序在调试时更加的麻烦，因此在写多进程的程序时，要先按照单进程的程序来写，保证单进程不出错后，再将程序转换为多进程程序。</li>
-<li>在使用多进程执行<strong>类成员函数时</strong>，要注意<strong>类成员变量是否存入大量数据</strong>，同时，最好将需要多进程执行的函数转为<strong>静态方法</strong>。</li>
-</ol>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>由于初衷仅是记录自己实验过程中对多进程的简单使用，方便以后再次使用时进行查阅，因此本文仅涉及4个简单的使用方法和2个相关问题，并没有深入分析原理。同时，由于是在事后通过回忆写下，没有真正复现错误，因此文中并没有给出具体的报错信息。将来若遇见同样的或新的问题，再进行更新和补充。</p>
-<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://thelaziestprogrammer.com/python/multiprocessing-pool-expect-initret-proposal" target="_blank" rel="noopener">https://thelaziestprogrammer.com/python/multiprocessing-pool-expect-initret-proposal</a><br><a href="https://thelaziestprogrammer.com/python/multiprocessing-pool-a-global-solution" target="_blank" rel="noopener">https://thelaziestprogrammer.com/python/multiprocessing-pool-a-global-solution</a></p>
-
-      
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/30/Python%E5%A4%9A%E8%BF%9B%E7%A8%8B/" rel="prev" title="Python多进程">
+      <i class="fa fa-chevron-left"></i> Python多进程
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
-  
-
-
   
 
 
@@ -434,6 +336,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#穿刺"><span class="nav-number">2.</span> <span class="nav-text">穿刺</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载frp"><span class="nav-number">2.1.</span> <span class="nav-text">下载frp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置frp"><span class="nav-number">2.2.</span> <span class="nav-text">配置frp</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#配置阿里云server"><span class="nav-number">2.2.1.</span> <span class="nav-text">配置阿里云server</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置内网服务器client"><span class="nav-number">2.2.2.</span> <span class="nav-text">配置内网服务器client</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#检查阿里云的安全组设置"><span class="nav-number">2.3.</span> <span class="nav-text">检查阿里云的安全组设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试"><span class="nav-number">2.4.</span> <span class="nav-text">测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#端口转发"><span class="nav-number">3.</span> <span class="nav-text">端口转发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求描述"><span class="nav-number">3.1.</span> <span class="nav-text">需求描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nginx下载与配置"><span class="nav-number">3.2.</span> <span class="nav-text">nginx下载与配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">4.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
