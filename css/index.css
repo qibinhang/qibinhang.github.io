@@ -273,7 +273,7 @@ blockquote p {
   z-index: 20;
 }
 .header_wrap {
-  max-width: 1200px;
+  max-width: 1300px;
   margin-left: auto;
   margin-right: auto;
   clear: both;
@@ -813,7 +813,7 @@ blockquote p {
 }
 @media (min-width: 66.67em) {
   .footer_wrap {
-    max-width: 1200px;
+    max-width: 1300px;
   }
 }
 @media (min-width: 34em) {
