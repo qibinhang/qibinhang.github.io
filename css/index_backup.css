@@ -493,12 +493,12 @@ blockquote p {
 }
 @media screen and (min-width: 66.67em) {
   #page_main {
-    max-width: 1300px;
+    max-width: 1200px;
   }
 }
 @media (min-width: 34em) {
   .page {
-    width: 81%;
+    width: 82.5%;
     float: right;
     margin-right: 0;
   }
@@ -534,13 +534,12 @@ blockquote p {
 }
 .author-avatar img {
   width: 100%;
-  max-width: 210px;
+  max-width: 150px;
   border-radius: 20%;
 }
 .author-discrip {
   display: table-cell;
   vertical-align: top;
-  text-align: center;
   padding-left: 15px;
   padding-right: 15px;
   line-height: 1.2;
@@ -552,7 +551,6 @@ blockquote p {
 .author-discrip .author-bio {
   font-size: 1.2rem;
   margin: 0.3rem 0;
-  text-align: left;
 }
 .author-links {
   display: table-cell;
@@ -707,7 +705,7 @@ blockquote p {
 @media (min-width: 34em) {
   .side-card {
     width: 15.25424%;
-    min-width: 215px;
+    min-width: 165px;
     float: left;
     margin-right: 1.69492%;
     opacity: 1;
@@ -715,7 +713,7 @@ blockquote p {
     transition: opacity 0.2s ease-in-out;
   }
   .side-card .card-wrap {
-    padding: 0px 0px 0px 0px;
+    padding: 10px 10px 10px 17px;
   }
   .sticky {
     clear: both;
